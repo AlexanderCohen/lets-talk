@@ -79,3 +79,5 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem "devise"
 gem 'httparty'
 gem 'kaminari'
+
+gem 'font-awesome-sass', '~> 6.4.0'

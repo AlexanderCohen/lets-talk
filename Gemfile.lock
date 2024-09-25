@@ -104,6 +104,14 @@ GEM
       dotenv (= 3.1.4)
       railties (>= 6.1)
     erubi (1.13.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-arm-linux-gnu)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86-linux-gnu)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
+    font-awesome-sass (6.4.2)
+      sassc (~> 2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     httparty (0.22.0)
@@ -222,6 +230,8 @@ GEM
       railties (>= 5.2)
     rexml (3.3.7)
     rubyzip (2.3.2)
+    sassc (2.4.0)
+      ffi (~> 1.9)
     selenium-webdriver (4.25.0)
       base64 (~> 0.2)
       logger (~> 1.4)
@@ -275,6 +285,7 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  font-awesome-sass (~> 6.4.0)
   httparty
   jbuilder
   jsbundling-rails

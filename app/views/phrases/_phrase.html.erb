@@ -1,22 +1,14 @@
-<div id="<%= dom_id phrase %>">
-  <p>
-    <strong>User:</strong>
-    <%= phrase.user_id %>
-  </p>
-
-  <p>
-    <strong>Text:</strong>
-    <%= phrase.text %>
-  </p>
-
-  <p>
-    <strong>Category:</strong>
-    <%= phrase.category %>
-  </p>
-
-  <p>
-    <strong>Audio url:</strong>
-    <%= phrase.audio_url %>
-  </p>
-
+<div id="phrase_<%= phrase.id %>" data-controller="phrase" class="bg-white p-4 rounded shadow"  data-phrase-audio-url-value="<%= phrase.audio.attached? ? url_for(phrase.audio) : '' %>" >
+  <p class="text-lg"><%= phrase.text %></p>
+  <p class="text-sm text-gray-500"><%= phrase.category %></p>
+  <div class="mt-4 flex space-x-2">
+    <%= link_to "Edit", edit_phrase_path(phrase), class: "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded" %>
+    <%= link_to "Delete", phrase, method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" %>
+    <button data-action="phrase#play" 
+           
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded" 
+            aria-label="Play Phrase">
+      Play 
+    </button>
+  </div>
 </div>

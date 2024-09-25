@@ -2,23 +2,34 @@ class ElevenLabsService
     include HTTParty
     base_uri 'https://api.elevenlabs.io'
   
+    # test with ElevenLabsService.new.text_to_speech("Hello, how are you?")
     def initialize
+      @api_key = ENV['ELEVEN_LABS_API_KEY'] || Rails.application.credentials.eleven_labs_api_key
       @headers = {
-        "Authorization" => "Bearer #{ENV['ELEVEN_LABS_API_KEY']}",
-        "Content-Type" => "application/json"
+        "Accept": "audio/mpeg",
+        "Content-Type": "application/json",
+        "xi-api-key": "#{@api_key}"
       }
+      @voice_id = "Wp52orDXakT0vizZyufK"
     end
   
     def text_to_speech(text)
       body = {
         text: text,
-        voice: "en-US-Standard-B",
-        format: "mp3"
+        model_id: "eleven_turbo_v2",
+        voice_id: @voice_id,
+        voice_settings: {
+          stability: 0.7,
+          similarity_boost: 1.0
+        }
       }
-      response = self.class.post('/v1/text-to-speech', headers: @headers, body: body.to_json)
+      path = "/v1/text-to-speech/#{@voice_id}"
+      puts path
+      response = self.class.post(path, headers: @headers, body: body.to_json)
       case response.code
       when 200
-        response.parsed_response['audio_url']
+        # Return the MP3 file content directly
+        response.body
       when 429
         Rails.logger.warn "Eleven Labs API rate limit exceeded."
         nil

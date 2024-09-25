@@ -1,0 +1,5 @@
+<%= turbo_stream.append "phrases", partial: "phrases/phrase", locals: { phrase: @phrase } %>
+<%= turbo_stream.replace "new_phrase", partial: "phrases/form", locals: { phrase: current_user.phrases.build } %>
+<%= turbo_stream.replace "notice", partial: "shared/notice", locals: { message: "Phrase was successfully created." } if notice %>
+<%= turbo_stream.prepend "phrases", partial: "phrase", locals: { phrase: @phrase } %>
+<%= turbo_stream.replace "new_phrase", partial: "form", locals: { phrase: Phrase.new } %>

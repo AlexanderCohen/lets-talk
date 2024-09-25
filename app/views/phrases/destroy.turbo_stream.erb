@@ -1,0 +1,2 @@
+<%= turbo_stream.remove "phrase_#{@phrase.id}" %>
+<%= turbo_stream.replace "notice", partial: "shared/notice", locals: { message: "Phrase was successfully destroyed." } if notice %>
