@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @phrase %>
+
+<div>
+  <%= link_to "Edit this phrase", edit_phrase_path(@phrase) %> |
+  <%= link_to "Back to phrases", phrases_path %>
+
+  <%= button_to "Destroy this phrase", @phrase, method: :delete %>
+</div>

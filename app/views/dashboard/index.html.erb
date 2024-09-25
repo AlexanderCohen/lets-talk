@@ -1,0 +1,22 @@
+<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+<div class="mb-6">
+  <h2 class="text-2xl font-semibold mb-2">Convert Text to Speech</h2>
+  <%= link_to "New Phrase", new_phrase_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+</div>
+<div>
+  <h2 class="text-2xl font-semibold mb-2">Recent Phrases</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @recent_phrases.each do |phrase| %>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="text-lg"><%= phrase.text %></p>
+        <p class="text-sm text-gray-500"><%= phrase.category %></p>
+        <div class="mt-4 flex space-x-2">
+          <%= link_to "Edit", edit_phrase_path(phrase), class: "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded" %>
+          <%= link_to "Delete", phrase, method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" %>
+          <button data-action="click->phrase#play" data-audio-url="<%= phrase.audio_url %>" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">Play</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "View All Phrases", phrases_path, class: "text-blue-500 hover:text-blue-700 mt-4 inline-block" %>
+</div>

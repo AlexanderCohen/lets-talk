@@ -1,0 +1,30 @@
+<h1 class="text-2xl font-bold mb-4">Your Phrases</h1>
+<div class="flex justify-between mb-4">
+  <%= link_to "New Phrase", new_phrase_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  <%= form_with url: phrases_path, method: :get, local: true, class: "flex space-x-2" do %>
+    <input type="text" name="search" placeholder="Search..." value="<%= params[:search] %>" class="border rounded px-2 py-1">
+    <select name="category" class="border rounded px-2 py-1">
+      <option value="">All Categories</option>
+      <% Phrase.distinct.pluck(:category).each do |cat| %>
+        <option value="<%= cat %>" <%= "selected" if params[:category] == cat %>><%= cat.capitalize %></option>
+        <% end %>
+      </select>
+      <%= submit_tag "Filter", class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+    <% end %>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @phrases.each do |phrase| %>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="text-lg"><%= phrase.text %></p>
+        <p class="text-sm text-gray-500"><%= phrase.category %></p>
+        <div class="mt-4 flex space-x-2">
+          <%= link_to "Edit", edit_phrase_path(phrase), class: "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded" %>
+          <%= link_to "Delete", phrase, method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" %>
+          <button data-action="click->phrase#play" data-audio-url="<%= phrase.audio_url %>" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">Play</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="mt-4">
+    <%= paginate @phrases %>
+  </div>
