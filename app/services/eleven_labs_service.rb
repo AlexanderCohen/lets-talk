@@ -10,13 +10,14 @@ class ElevenLabsService
         "Content-Type": "application/json",
         "xi-api-key": "#{@api_key}"
       }
+      ## Replace this with your own voice id or just use the default.
       @voice_id = "Wp52orDXakT0vizZyufK"
     end
   
     def text_to_speech(text)
       body = {
         text: text,
-        model_id: "eleven_turbo_v2",
+        model_id: "eleven_turbo_v2_5",
         voice_id: @voice_id,
         voice_settings: {
           stability: 0.7,

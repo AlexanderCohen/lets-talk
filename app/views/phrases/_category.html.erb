@@ -1,0 +1,26 @@
+<div x-data="{ open: true }" class="mb-4">
+  <button 
+    @click="open = !open" 
+    class="w-full text-left text-xl font-semibold mb-2 py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded flex justify-between items-center"
+  >
+    <span><%= category %></span>
+    <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+  <div 
+    x-show="open" 
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 transform scale-95"
+    x-transition:enter-end="opacity-100 transform scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 transform scale-100"
+    x-transition:leave-end="opacity-0 transform scale-95"
+    id="category_<%= category.parameterize %>" 
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2"
+  >
+    <% phrases.each do |phrase| %>
+      <%= render 'phrase', phrase: phrase %>
+    <% end %>
+  </div>
+</div>

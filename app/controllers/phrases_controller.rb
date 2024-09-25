@@ -1,5 +1,6 @@
 class PhrasesController < ApplicationController
     before_action :set_phrase, only: %i[ show edit update destroy ]
+    before_action :set_categories, only: [:new, :create, :edit, :update, :index]
   
     # GET /phrases or /phrases.json
     def index
@@ -17,6 +18,10 @@ class PhrasesController < ApplicationController
     # POST /phrases or /phrases.json
     def create
       @phrase = current_user.phrases.build(phrase_params)
+      
+      # Use the new category if provided
+      @phrase.category = params[:phrase][:new_category] if params[:phrase][:new_category].present?
+
       service = ElevenLabsService.new
       audio_content = service.text_to_speech(@phrase.text)
 
@@ -24,12 +29,15 @@ class PhrasesController < ApplicationController
         @phrase.audio.attach(io: StringIO.new(audio_content), filename: "#{SecureRandom.uuid}.mp3", content_type: "audio/mp3")
       end
 
+      @new_category = !@categories.include?(@phrase.category)
+      @categories << @phrase.category if @new_category
+
       respond_to do |format|
         if @phrase.save
           format.turbo_stream
           format.html { redirect_to phrases_url, notice: "Phrase was successfully created." }
         else
-          format.turbo_stream { render turbo_stream: turbo_stream.replace('new_phrase', partial: 'form', locals: { phrase: @phrase }) }
+          format.turbo_stream { render turbo_stream: turbo_stream.replace('new_phrase_form', partial: 'form', locals: { phrase: @phrase }) }
           format.html { render :new, status: :unprocessable_entity }
         end
       end
@@ -61,6 +69,10 @@ class PhrasesController < ApplicationController
   
       def set_phrase
         @phrase = current_user.phrases.find(params[:id])
+      end
+  
+      def set_categories
+        @categories = current_user.phrases.pluck(:category).uniq.sort
       end
   
       def phrase_params

@@ -1,14 +1,18 @@
-<div id="phrase_<%= phrase.id %>" data-controller="phrase" class="bg-white p-4 rounded shadow"  data-phrase-audio-url-value="<%= phrase.audio.attached? ? url_for(phrase.audio) : '' %>" >
-  <p class="text-lg"><%= phrase.text %></p>
-  <p class="text-sm text-gray-500"><%= phrase.category %></p>
-  <div class="mt-4 flex space-x-2">
-    <%= link_to "Edit", edit_phrase_path(phrase), class: "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded" %>
-    <%= link_to "Delete", phrase, method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" %>
-    <button data-action="phrase#play" 
-           
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded" 
-            aria-label="Play Phrase">
-      Play 
-    </button>
+<div id="phrase_<%= phrase.id %>" 
+                 class="bg-white p-4 rounded shadow cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 max-w-64"
+                 data-phrase-target="playButton"
+                 data-action="click->phrase#play"
+  data-audio-url="<%= phrase.audio_url %>">
+  <p class="text-lg mb-2"><%= phrase.text&.capitalize %></p>
+  <div class="flex justify-between items-center">
+    <span data-phrase-target="playStatus" class="text-sm text-gray-500">Click to play</span>
+    <div class="space-x-2">
+      <%= link_to edit_phrase_path(phrase), class: "text-gray-400 hover:text-yellow-500 transition duration-300", title: "Edit" do %>
+        <i class="fas fa-edit"></i>
+      <% end %>
+      <%= link_to phrase, method: :delete, data: { confirm: "Are you sure?" }, class: "text-gray-400 hover:text-red-500 transition duration-300", title: "Delete" do %>
+        <i class="fas fa-trash"></i>
+      <% end %>
+    </div>
   </div>
 </div>

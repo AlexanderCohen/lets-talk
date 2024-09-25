@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["playButton", "form", "phrasesList", "playStatus"]
+    static targets = ["playButton", "form", "phrasesList", "playStatus", "newCategory"]
 
     connect() {
         console.log("Phrases controller connected")
@@ -58,10 +58,26 @@ export default class extends Controller {
         }
     }
 
+    toggleNewCategory(event) {
+        const selectedValue = event.target.value
+        if (selectedValue === "") {
+            this.newCategoryTarget.style.display = "block"
+        } else {
+            this.newCategoryTarget.style.display = "none"
+            this.newCategoryTarget.value = "" // Clear the new category input when an existing category is selected
+        }
+    }
+
     createPhrase(event) {
         event.preventDefault()
         const form = event.target
         const formData = new FormData(form)
+
+        // If a new category is entered, use it instead of the selected category
+        const newCategory = formData.get('phrase[new_category]')
+        if (newCategory) {
+            formData.set('phrase[category]', newCategory)
+        }
 
         fetch(form.action, {
             method: form.method,
@@ -74,6 +90,7 @@ export default class extends Controller {
             .then(html => {
                 Turbo.renderStreamMessage(html)
                 form.reset()
+                this.newCategoryTarget.style.display = "none"
             })
             .catch(error => {
                 console.error("Error creating phrase:", error)
