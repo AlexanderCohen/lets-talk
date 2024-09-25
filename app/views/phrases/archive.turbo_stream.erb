@@ -1,0 +1,2 @@
+<%= turbo_stream.remove @phrase %>
+<%= turbo_stream.replace "flash_messages", partial: "shared/flash_messages", locals: { message: "Phrase was successfully archived." } %>

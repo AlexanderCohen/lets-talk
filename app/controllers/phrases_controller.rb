@@ -1,10 +1,10 @@
 class PhrasesController < ApplicationController
-    before_action :set_phrase, only: %i[ show edit update destroy ]
+    before_action :set_phrase, only: %i[ show edit update destroy archive unarchive ]
     before_action :set_categories, only: [:new, :create, :edit, :update, :index]
   
     # GET /phrases or /phrases.json
     def index
-        @phrases = current_user.phrases.order(created_at: :desc)
+        @phrases = current_user.phrases.active.order(created_at: :desc)
         @phrases = @phrases.where("text ILIKE ?", "%#{params[:search]}%") if params[:search].present?
         @phrases = @phrases.where(category: params[:category]) if params[:category].present?
         @phrases = @phrases.page(params[:page]).per(10)
@@ -63,6 +63,26 @@ class PhrasesController < ApplicationController
         format.turbo_stream
         format.html { redirect_to phrases_url, notice: "Phrase was successfully destroyed." }
       end
+    end
+  
+    def archive
+      @phrase.update(archived: true)
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(@phrase) }
+        format.html { redirect_to phrases_url, notice: 'Phrase was successfully archived.' }
+      end
+    end
+  
+    def unarchive
+      @phrase.update(archived: false)
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(@phrase) }
+        format.html { redirect_to archived_phrases_url, notice: 'Phrase was successfully unarchived.' }
+      end
+    end
+  
+    def archived
+      @archived_phrases = current_user.phrases.where(archived: true).order(created_at: :desc)
     end
   
     private

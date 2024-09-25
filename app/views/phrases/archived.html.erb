@@ -1,15 +1,7 @@
 <div data-controller="phrase">
-  <div id="flash_messages">
-    <%= render "shared/flash" %>
-  </div>
-  <div class="mb-8">
-    <h2 class="text-xl font-semibold mb-2">Create New Phrase</h2>
-    <div id="new_phrase_form">
-      <%= render 'form', phrase: Phrase.new %>
-    </div>
-  </div>
-  <div id="phrases_list" data-phrase-target="phrasesList">
-    <% @phrases.group_by(&:category).each do |category, phrases| %>
+  <h1 class="text-2xl font-bold mb-4">Archived Phrases</h1>
+  <div id="archived_phrases_list" data-phrase-target="phrasesList">
+    <% @archived_phrases.group_by(&:category).each do |category, phrases| %>
       <div x-data="{ open: true }" class="mb-4">
         <button 
           @click="open = !open" 
@@ -32,10 +24,11 @@
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2"
         >
           <% phrases.each do |phrase| %>
-            <%= render 'phrase', phrase: phrase %>
+            <%= render 'archived_phrase', phrase: phrase %>
           <% end %>
         </div>
       </div>
     <% end %>
   </div>
+  <%= link_to 'Back to Active Phrases', phrases_path, class: "mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
 </div>

@@ -9,24 +9,31 @@
       </ul>
     </div>
   <% end %>
-  <div>
-    <%= form.label :text, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.text_area :text, rows: 3, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
-  </div>
-  <div>
-    <%= form.label :category, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1 flex flex-row rounded-md shadow-sm justify-between">
-      <%= form.select :category, 
-                      options_for_select(@categories, phrase.category),
-                      { prompt: "Select or create new category" },
-                      class: "flex-1 p-2rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
-                      data: { action: "change->phrase#toggleNewCategory" } %>
-      <%= form.text_field :new_category, 
-                        placeholder: "New category", 
-                        class: "mx-2 p-2 block w-full rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50", 
-                        style: "",
-                        data: { phrase_target: "newCategory" } %>
+  <div class="flex flex-row">
+    <div class="flex-1 mr-3">
+      <%= form.label :text, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :text, rows: 3, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+    </div>
+    <div class="flex-1">
+      <%= form.label :category, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1 flex flex-row rounded-md shadow-sm justify-between">
+        <%= form.select :category,
+                        options_for_select(@categories, phrase.category),
+                        { prompt: "Select or create new category" },
+                        class: "flex-1 p-2rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                        data: { action: "change->phrase#toggleNewCategory" } %>
+        <%= form.text_field :new_category,
+                          placeholder: "New category",
+                          class: "mx-2 p-2 block w-full rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                          style: "",
+                          data: { phrase_target: "newCategory" } %>
+      </div>
     </div>
   </div>
-  <%= form.submit phrase.new_record? ? "Create Phrase" : "Update Phrase", class: "mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  <div class="flex flex-row justify-between">
+    <%= form.submit phrase.new_record? ? "Save Phrase" : "Update Phrase", class: "mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <div class="mb-4">
+      <%= link_to 'View Archived Phrases', archived_phrases_path, class: "hover:bg-gray-700 text-gray-400 font-bold py-2 px-4 rounded" %>
+    </div>
+  </div>
 <% end %>

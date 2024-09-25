@@ -58,6 +58,10 @@ export default class extends Controller {
         }
     }
 
+    stopPropagation(event) {
+        event.stopPropagation();
+    }
+
     toggleNewCategory(event) {
         const selectedValue = event.target.value
         if (selectedValue === "") {
