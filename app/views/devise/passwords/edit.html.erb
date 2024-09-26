@@ -1,0 +1,28 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Change Your Password</h2>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "mt-8 space-y-6" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= f.hidden_field :reset_password_token %>
+      <div class="rounded-md shadow-sm -space-y-px">
+        <div class="my-4">
+          <%= f.label :password, "New Password", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %>
+          <% if @minimum_password_length %>
+            <p class="mt-2 text-sm text-gray-600"><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+          <% end %>
+        </div>
+        <div class="my-4">
+          <%= f.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %>
+        </div>
+      </div>
+      <div>
+        <%= f.submit "Change My Password", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    <% end %>
+    <div class="text-sm text-center">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>
