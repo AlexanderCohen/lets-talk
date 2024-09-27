@@ -20,7 +20,7 @@ class Phrase < ApplicationRecord
       if Rails.env.production?
         audio.url
       else
-        Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+        Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: false)
       end
     end
   end
