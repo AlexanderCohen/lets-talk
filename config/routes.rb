@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       patch :unarchive
     end
   end
-  root to: "dashboard#index"
+  root to: "phrases#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

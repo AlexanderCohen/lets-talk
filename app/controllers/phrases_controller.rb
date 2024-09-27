@@ -1,7 +1,11 @@
 class PhrasesController < ApplicationController
     before_action :set_phrase, only: %i[ show edit update destroy archive unarchive ]
     before_action :set_categories, only: [:new, :create, :edit, :update, :index]
-  
+    include Rails.application.routes.url_helpers
+
+    def audio_full_url
+      rails_blob_url(audio_url, only_path: false)
+    end
     # GET /phrases or /phrases.json
     def index
         @phrases = current_user.phrases.active.order(created_at: :desc)

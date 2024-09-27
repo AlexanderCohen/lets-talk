@@ -102,6 +102,67 @@ export default class extends Controller {
             })
     }
 
+    async share(event) {
+        this.stopPropagation(event)
+        event.preventDefault();
+        const button = event.currentTarget;
+        const text = button.dataset.phraseText;
+        const audioUrl = button.dataset.phraseAudio;
+
+        console.log('Share function called');
+        console.log('Text to share:', text);
+        console.log('Audio URL:', audioUrl);
+
+        try {
+            console.log('Attempting to fetch audio file...');
+            const response = await fetch(audioUrl);
+            console.log('Fetch response:', response);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            console.log('Audio blob created:', blob);
+
+            const audioFile = new File([blob], "audio.mp3", { type: "audio/mpeg" });
+            console.log('Audio File object created:', audioFile);
+
+            if (navigator.share) {
+                console.log('Web Share API is supported');
+                try {
+                    await navigator.share({
+                        text: text,
+                        files: [audioFile]
+                    });
+                    console.log('Shared successfully');
+                } catch (shareError) {
+                    console.error('Error during share:', shareError);
+                    if (shareError.name === 'AbortError') {
+                        console.log('User cancelled the share operation');
+                    } else {
+                        throw shareError;
+                    }
+                }
+            } else {
+                console.log('Web Share API is not supported, falling back to download');
+                const url = URL.createObjectURL(blob);
+                console.log('Blob URL created:', url);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'audio.mp3';
+                document.body.appendChild(a);
+                a.click();
+                console.log('Download initiated');
+                URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            console.error('Error in share function:', error);
+            alert("Error sharing the audio file. Please check the console for details.");
+        }
+    }
+
     disconnect() {
         if (this.currentAudio) {
             this.currentAudio.pause()

@@ -70,10 +70,19 @@ Rails.application.configure do
 
   config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
-  # Set the default host for URL generation
-  config.action_controller.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  # Allow lvh.me and localhost
+  config.hosts << "lvh.me"
+  config.hosts << "localhost"
 
+  # Use a configurable host
+  config.action_mailer.default_url_options = { host: ENV['APP_HOST'] || 'localhost', port: ENV['PORT'] || 3000 }
+
+
+  # Set the default host for URL generation
   # If you're using ActiveStorage, also set this:
-  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+  Rails.application.routes.default_url_options[:host] = "lvh.me:3000"
+
+  # Set the default URL options for Active Storage
+  config.active_storage.service = :local
+  config.action_mailer.default_url_options = { host: 'lvh.me', port: 3000 }
 end
