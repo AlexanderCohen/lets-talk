@@ -4,4 +4,4 @@
   <%= turbo_stream.prepend "category_#{@phrase.category.parameterize}", partial: "phrases/phrase", locals: { phrase: @phrase } %>
 <% end %>
 <%= turbo_stream.replace "new_phrase_form", partial: "phrases/form", locals: { phrase: Phrase.new } %>
-<%= turbo_stream.replace "flash_messages", partial: "shared/flash_messages" %>
+<%= turbo_stream.replace "flash_messages", partial: "shared/flash" %>

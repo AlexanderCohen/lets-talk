@@ -18,9 +18,9 @@
       <%= form.label :category, class: "block text-sm font-medium text-gray-700" %>
       <div class="mt-1 flex flex-row rounded-md shadow-sm justify-between">
         <%= form.select :category,
-                        options_for_select(@categories, phrase.category),
-                        { prompt: "Select or create new category" },
-                        class: "flex-1 p-2rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                        options_for_select(@categories, phrase.category || "uncategorised"),
+                        { include_blank: "Select or create new category" },
+                        class: "flex-1 p-2 rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
                         data: { action: "change->phrase#toggleNewCategory" } %>
         <%= form.text_field :new_category,
                           placeholder: "New category",

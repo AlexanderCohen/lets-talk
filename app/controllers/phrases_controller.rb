@@ -17,16 +17,22 @@ class PhrasesController < ApplicationController
 
     # POST /phrases or /phrases.json
     def create
-      @phrase = current_user.phrases.build(phrase_params)
+      @phrase = current_user.phrases.build(phrase_params.except(:new_category))
       
-      # Use the new category if provided
-      @phrase.category = params[:phrase][:new_category] if params[:phrase][:new_category].present?
+      # Set default category if not provided
+      @phrase.category = "uncategorised" if @phrase.category.blank?
 
       service = ElevenLabsService.new
       audio_content = service.text_to_speech(@phrase.text)
 
-      if audio_content
-        @phrase.audio.attach(io: StringIO.new(audio_content), filename: "#{SecureRandom.uuid}.mp3", content_type: "audio/mp3")
+      if audio_content.present?
+        @phrase.audio.attach(
+          io: StringIO.new(audio_content),
+          filename: "#{SecureRandom.uuid}.mp3",
+          content_type: "audio/mpeg"
+        )
+      else
+        @phrase.errors.add(:base, "Failed to generate audio content")
       end
 
       @new_category = !@categories.include?(@phrase.category)
@@ -96,6 +102,6 @@ class PhrasesController < ApplicationController
       end
   
       def phrase_params
-        params.require(:phrase).permit(:text, :category)
+        params.require(:phrase).permit(:text, :category, :new_category)
       end
   end
