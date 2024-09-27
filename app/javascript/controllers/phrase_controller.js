@@ -107,11 +107,18 @@ export default class extends Controller {
         event.preventDefault();
         const button = event.currentTarget;
         const text = button.dataset.phraseText;
-        const audioUrl = button.dataset.phraseAudio;
+        let audioUrl = button.dataset.phraseAudio;
 
         console.log('Share function called');
         console.log('Text to share:', text);
-        console.log('Audio URL:', audioUrl);
+        console.log('Original Audio URL:', audioUrl);
+
+        // If the URL is relative, make it absolute
+        if (audioUrl.startsWith('/')) {
+            audioUrl = `https://lets-talk-together.com${audioUrl}`;
+        }
+
+        console.log('Final Audio URL:', audioUrl);
 
         try {
             console.log('Attempting to fetch audio file...');
@@ -159,6 +166,7 @@ export default class extends Controller {
             }
         } catch (error) {
             console.error('Error in share function:', error);
+            console.error('Error details:', error.message);
             alert("Error sharing the audio file. Please check the console for details.");
         }
     }
