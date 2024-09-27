@@ -50,7 +50,9 @@ export default class extends Controller {
                 }
             }).catch(error => {
                 console.error("Error playing audio:", error)
-                alert("Error playing audio. Please try again.")
+                // Not sure why, but after an hour or so, we get an error when trying to play the file.
+                // Suspect creating a new Audio(audioUrl) for each link on page load may resolve the issue.
+                alert("Error playing audio. Please try refreshing the page then trying again.")
             })
         } else {
             console.log("No audio URL available")
@@ -114,6 +116,7 @@ export default class extends Controller {
         console.log('Original Audio URL:', audioUrl);
 
         // If the URL is relative, make it absolute
+        // This will route through the production site when in development and test.
         if (audioUrl.startsWith('/')) {
             audioUrl = `https://lets-talk-together.com${audioUrl}`;
         }
