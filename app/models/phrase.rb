@@ -16,6 +16,12 @@ class Phrase < ApplicationRecord
   after_destroy_commit { broadcast_remove_to "phrases" }
 
   def audio_url
-    Rails.application.routes.url_helpers.url_for(audio)
+    if audio.attached?
+      if Rails.env.production?
+        audio.url
+      else
+        Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: true)
+      end
+    end
   end
 end
