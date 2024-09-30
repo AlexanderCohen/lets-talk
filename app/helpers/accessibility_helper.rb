@@ -7,7 +7,7 @@ module AccessibilityHelper
     # Users can configure their text size modifier, by default it's 1,
     # meaning that the text size will be incremented by 1.
 
-    index_for_style = TEXT_SIZE_STYLES.index(style) + (current_user.text_size_modifier.to_i || 1)
+    index_for_style = TEXT_SIZE_STYLES.index(style) + (current_user&.text_size_modifier.to_i || 1)
     # Ensure the index is within the valid range
     index_for_style = [[0, index_for_style].max, TEXT_SIZE_STYLES.length - 1].min
     TEXT_SIZE_STYLES[index_for_style]
