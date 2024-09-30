@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_25_224827) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_30_043435) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_25_224827) do
     t.bigint "user_id", null: false
     t.string "text"
     t.string "category"
-    t.string "audio_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "archived", default: false
@@ -61,11 +60,37 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_25_224827) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "config", default: {}
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "voice_services", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "type", null: false
+    t.boolean "is_pinned", default: false
+    t.boolean "is_hidden", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "voices", force: :cascade do |t|
+    t.bigint "voice_service_id", null: false
+    t.string "voice_id", null: false
+    t.string "name", null: false
+    t.string "type", null: false
+    t.string "language", null: false
+    t.jsonb "data", default: {}, null: false
+    t.string "gender"
+    t.string "nationality"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["voice_service_id"], name: "index_voices_on_voice_service_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "phrases", "users"
+  add_foreign_key "voices", "voice_services"
 end
