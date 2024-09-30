@@ -18,7 +18,7 @@ class Phrase < ApplicationRecord
   def audio_url
     if audio.attached?
       if Rails.env.production?
-        audio.url
+        audio.url(expires_in: 3.hours)
       else
         Rails.application.routes.url_helpers.rails_blob_url(audio, only_path: false)
       end
