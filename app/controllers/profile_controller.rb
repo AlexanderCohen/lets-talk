@@ -12,6 +12,6 @@ class ProfileController < ApplicationController
   private
 
   def user_params
-    params.permit(:selected_voice_id, :selected_service_id)
+    params.permit(:first_name, :last_name, :preferred_name, :selected_voice_id, :selected_service_id, :text_size_modifier)
   end
 end

@@ -5,7 +5,7 @@
     data-audio-url="<%= phrase.audio_url %>"
     style="min-height: 200px; display: flex; flex-direction: column; justify-content: space-between;"
   >
-  <span data-phrase-target="playStatus" class="btn bg-indigo-600 px-4 py-1 rounded-md text-white focus:ring-indigo-500 text-lg text-gray-600 mb-4">
+  <span data-phrase-target="playStatus" class="btn bg-indigo-600 px-4 py-1 rounded-md text-white focus:ring-indigo-500 <%= text_size_for("text-base") %> text-gray-600 mb-4">
     <i class="fas fa-play-circle mr-2"></i>Click to play
   </span>
   <p class="text-2xl mb-4 font-semibold text-gray-800 leading-relaxed"><%= phrase.text&.capitalize %></p>

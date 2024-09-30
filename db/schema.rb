@@ -61,6 +61,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_30_043435) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "config", default: {}
+    t.string "first_name"
+    t.string "last_name"
+    t.string "preferred_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
