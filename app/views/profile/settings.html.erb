@@ -1,0 +1,19 @@
+<%= form_with url: profile_index_path, method: :patch, local: true, html: { class: "space-y-6" } do |form| %>
+  <div class="flex items-center">
+    <%= form.label :selected_service_id, "Select Service", class: "block text-sm font-medium text-gray-700 w-1/4" %>
+    <div class="w-3/4">
+      <%= form.select :selected_service_id, voice_service_options, { include_blank: "Please select", selected: current_voice_service.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" } %>
+    </div>
+  </div>
+
+  <div class="flex items-center mt-4">
+    <%= form.label :selected_voice_id, "Select Voice", class: "block text-sm font-medium text-gray-700 w-1/4" %>
+    <div class="w-3/4">
+      <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { include_blank: "Please select", selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" } %>
+    </div>
+  </div>
+
+  <div class="flex justify-end mt-6">
+    <%= form.submit "Save Changes", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+<% end %>
