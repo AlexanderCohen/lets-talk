@@ -72,8 +72,7 @@ Rails.application.configure do
   config.hosts << "localhost"
 
   # Use a configurable host
-  config.action_mailer.default_url_options = { host: ENV['APP_HOST'] || 'localhost', port: ENV['PORT'] || 3000 }
-
+  config.action_mailer.default_url_options = {host: ENV["APP_HOST"] || "localhost", port: ENV["PORT"] || 3000}
 
   # Set the default host for URL generation
   # If you're using ActiveStorage, also set this:
@@ -82,5 +81,5 @@ Rails.application.configure do
   # Set the default URL options for Active Storage
   config.active_storage.service = :local
   # config.active_storage.service = :amazon
-  config.action_mailer.default_url_options = { host: 'lvh.me', port: 3000 }
+  config.action_mailer.default_url_options = {host: "lvh.me", port: 3000}
 end

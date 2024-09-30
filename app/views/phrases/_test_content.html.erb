@@ -1,0 +1,13 @@
+<div data-controller="expandable" data-expandable-default-expanded-value="false" class="border rounded-lg shadow-sm">
+  <div data-action="click->expandable#toggle" class="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+    <h3 class="text-lg font-semibold">My Expandable Header</h3>
+    <svg data-expandable-target="icon" class="w-6 h-6 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+  <div data-expandable-target="content" class="overflow-hidden transition-[max-height] duration-300 ease-in-out">
+    <div class="p-4">
+      My Expandable Content
+    </div>
+  </div>
+</div>

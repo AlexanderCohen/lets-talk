@@ -1,12 +1,24 @@
 import { Controller } from "@hotwired/stimulus"
+import Sortable from "sortablejs"
 
 export default class extends Controller {
-    static targets = ["playButton", "form", "phrasesList", "playStatus", "newCategory"]
+    static targets = ["playButton", "form", "phrasesList", "playStatus", "newCategory", "categoryContainer"]
 
     connect() {
         console.log("Phrases controller connected")
         this.currentAudio = null
         this.currentPlayingCard = null
+        this.initializeSortable()
+    }
+
+    initializeSortable() {
+        this.categoryContainerTargets.forEach(container => {
+            Sortable.create(container, {
+                group: "phrases",
+                animation: 150,
+                onEnd: this.handleDragEnd.bind(this)
+            })
+        })
     }
 
     play(event) {
@@ -179,5 +191,29 @@ export default class extends Controller {
             this.currentAudio.pause()
             this.currentAudio = null
         }
+    }
+
+    // Allow the User to drag and drop phrases into different categories
+    handleDragEnd(event) {
+        const phraseId = event.item.id.split('_')[1]
+        const newCategory = event.to.dataset.category
+
+        fetch(`/phrases/${phraseId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ phrase: { category: newCategory } })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update phrase category')
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error)
+            // Optionally, revert the DOM change or show an error message
+        })
     }
 }
