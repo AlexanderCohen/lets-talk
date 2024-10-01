@@ -6,5 +6,4 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-eleven_labs = VoiceService::ElevenLabs.find_or_create_by!(name: "Eleven Labs", is_pinned: true)
-eleven_labs.generate_voices
+VoiceService.setup

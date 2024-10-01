@@ -19,6 +19,7 @@ class CreateVoices < ActiveRecord::Migration[7.0]
     end
 
     add_index :voices, [:voice_id, :type], unique: true
+    VoiceService.setup
   end
 
   # rails db:migrate:down VERSION=20240930043435

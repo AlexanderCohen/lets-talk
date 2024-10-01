@@ -7,6 +7,10 @@ class VoiceService < ApplicationRecord
     eleven_labs: { name: "Eleven Labs", sti_klass: ElevenLabs }
   }.freeze
 
+  def self.setup
+    eleven_labs = VoiceService::ElevenLabs.find_or_create_by!(name: "Eleven Labs", is_pinned: true)
+    eleven_labs.generate_voices
+  end
 
   def self.valid_services
     SERVICE_MAP.map { |key, value| value[:name] }

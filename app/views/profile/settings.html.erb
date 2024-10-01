@@ -3,8 +3,8 @@
 <%= form_with url: profile_index_path, method: :patch, local: true, html: { class: "space-y-6" } do |form| %>
   <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "personal-information" do %>
     <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Personal Information</h3>
-    <div class="flex items-center mb-4">
-      <p class="text-gray-700 text-sm rounded-md bg-white text-gray-600 p-2 text-center w-full">
+    <div class="flex items-center mb-4 p-2 rounded-md bg-blue-100 text-blue-800">
+      <p class="<%= text_size_for("text-sm") %>">
         All fields are optional.
       </p>
     </div>
@@ -40,16 +40,23 @@
 
   <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "voice-settings" do %>
     <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Voice Settings</h2>
+
+    <div class="flex items-center mb-4 p-2 rounded-md bg-blue-100 text-blue-800">
+      <p class="<%= text_size_for("text-sm") %>">
+        Note: Changing the voice settings here will currently not update existing phrases. The new settings will only apply to newly created phrases.
+      </p>
+    </div>
+
     <div class="flex items-center">
       <%= form.label :selected_service_id, "Select Service", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
-        <%= form.select :selected_service_id, voice_service_options, { include_blank: "Please select", selected: current_voice_service.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md" } %>
+        <%= form.select :selected_service_id, voice_service_options, { selected: current_voice_service.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md" } %>
       </div>
     </div>
     <div class="flex items-center mt-4">
       <%= form.label :selected_voice_id, "Select Voice", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
-        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { include_blank: "Please select", selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
+        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
       </div>
     </div>
     <%# Preview Voice %>
