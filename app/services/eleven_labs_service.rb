@@ -5,7 +5,7 @@ class ElevenLabsService
     DEFAULT_VOICE_ID = "Wp52orDXakT0vizZyufK".freeze
   
     # test with ElevenLabsService.new.text_to_speech("Hello, how are you?")
-    def initialize(voice_id: DEFAULT_VOICE_ID)
+    def initialize(voice_id: default_voice_id)
       @api_key = ENV['ELEVEN_LABS_API_KEY'] || Rails.application.credentials.eleven_labs_api_key
       @headers = {
         "Accept": "audio/mpeg", "Content-Type": "application/json", "xi-api-key": "#{@api_key}"
@@ -16,9 +16,7 @@ class ElevenLabsService
 
     def text_to_speech(text)
       body = {
-        text: text,
-        model_id: "eleven_turbo_v2_5",
-        voice_id: @voice_id,
+        text: text, model_id: "eleven_turbo_v2_5", voice_id: @voice_id,
         voice_settings: { stability: 0.7, similarity_boost: 1.0 }
       }
       path = "/v1/text-to-speech/#{@voice_id}"
@@ -48,4 +46,10 @@ class ElevenLabsService
       Rails.logger.error "Eleven Labs API Error #{e.message}"
       []
     end
+
+    private
+
+      def default_voice_id
+        Current.user&.selected_voice&.voice_id || DEFAULT_VOICE_ID
+      end
   end

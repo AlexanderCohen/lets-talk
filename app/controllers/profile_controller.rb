@@ -6,7 +6,7 @@ class ProfileController < ApplicationController
 
   def update
     current_user.update(user_params)
-    redirect_to root_path, notice: "Profile updated"
+    redirect_to settings_profile_index_path, notice: "Profile updated"
   end
 
   private

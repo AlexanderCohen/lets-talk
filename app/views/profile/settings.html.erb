@@ -1,6 +1,13 @@
+
+
 <%= form_with url: profile_index_path, method: :patch, local: true, html: { class: "space-y-6" } do |form| %>
   <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "personal-information" do %>
     <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Personal Information</h3>
+    <div class="flex items-center mb-4">
+      <p class="text-gray-700 text-sm rounded-md bg-white text-gray-600 p-2 text-center w-full">
+        All fields are optional.
+      </p>
+    </div>
     <div class="flex items-center">
       <%= form.label :first_name, "First Name", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
@@ -42,7 +49,14 @@
     <div class="flex items-center mt-4">
       <%= form.label :selected_voice_id, "Select Voice", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
-        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { include_blank: "Please select", selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md" } %>
+        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { include_blank: "Please select", selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
+      </div>
+    </div>
+    <%# Preview Voice %>
+    <div class="flex items-center mt-4 p-1 rounded-md bg-primary-400 text-white">
+      <%= form.label :preview_voice, "Preview Voice", class: "block font-medium w-1/4 text-white ml-1" %>
+      <div class="w-3/4">
+        <%= audio_tag current_user.selected_voice.audio_sample_url, controls: true, class: "mt-1 block w-full rounded-md border border-gray-300" %>
       </div>
     </div>
   <% end %>
