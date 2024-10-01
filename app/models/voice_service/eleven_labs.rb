@@ -18,5 +18,9 @@ class VoiceService < ApplicationRecord
         voice
       end
     end
+
+    def fallback_voice
+      voices.find_by(voice_id: ElevenLabsService::DEFAULT_VOICE_ID) || voices.first
+    end
   end
 end

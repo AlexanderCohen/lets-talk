@@ -3,9 +3,9 @@
 one:
   account: one
   user: one
-  roles: 
+  roles: {}
 
 two:
   account: two
   user: two
-  roles: 
+  roles: {}

@@ -32,6 +32,10 @@ class VoiceService < ApplicationRecord
     @service ||= service_klass.new
   end
 
+  def fallback_voice
+    voices.first
+  end
+
   private
 
   def set_type

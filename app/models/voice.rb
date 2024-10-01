@@ -3,6 +3,12 @@ class Voice < ApplicationRecord
 
   has_one_attached :audio_sample
 
+  scope :male, -> { where(gender: "male") }
+  scope :female, -> { where(gender: "female") }
+
+  # Support non-english voices in the future
+  scope :english, -> { where(language: "en") }
+
   before_validation :set_type
   before_validation :set_language
   before_validation :set_gender
@@ -20,7 +26,7 @@ class Voice < ApplicationRecord
     end
   end
 
-  # private
+    private
 
     def set_type
       return if voice_service.blank?

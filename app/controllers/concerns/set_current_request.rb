@@ -13,4 +13,8 @@ module SetCurrentRequest
     Current.ip_address = request.ip
     Current.user = current_user
   end
+
+  def fallback_account
+    current_user.accounts.order(created_at: :asc).first || current_user.create_default_account
+  end
 end

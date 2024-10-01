@@ -1,0 +1,51 @@
+<%= form_with model: @user, url: user_registration_path, local: true, html: { class: "space-y-8" } do |f| %>
+  <%= tag.div class: "rounded-lg bg-white shadow-md p-6 #{text_size_for("text-sm")}", id: "user-credentials" do %>
+    <h2 class="text-lg font-medium text-gray-900 mb-4">User Credentials</h2>
+
+    <div class="flex items-center mb-4">
+      <%= f.label :email, "Email", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+
+    <div class="flex items-center mb-4">
+      <%= f.label :password, "Password", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= f.password_field :password, autocomplete: "new-password", class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+        <% if @minimum_password_length %>
+          <em class="text-sm text-gray-500">(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= tag.div class: "rounded-lg bg-white shadow-md p-6 #{text_size_for("text-sm")}", id: "user-information" do %>
+    <h2 class="text-lg font-medium text-gray-900 mb-4">User Information</h2>
+
+    <div class="flex items-center mb-4">
+      <%= f.label :first_name, "First Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= f.text_field :first_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+
+    <div class="flex items-center mb-4">
+      <%= f.label :last_name, "Last Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= f.text_field :last_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+
+    <div class="flex items-center mb-4">
+      <%= f.label :preferred_name, "Preferred Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= f.text_field :preferred_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex justify-end mt-6">
+    <%= f.submit "Sign up", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+<% end %>

@@ -8,6 +8,7 @@ one:
   gender: MyString
   nationality: MyString
   description: MyText
+  voice_service: one
 
 two:
   name: MyString
@@ -17,3 +18,4 @@ two:
   gender: MyString
   nationality: MyString
   description: MyText
+  voice_service: one

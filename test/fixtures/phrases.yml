@@ -4,10 +4,8 @@ one:
   user: one
   text: MyString
   category: MyString
-  audio_url: MyString
 
 two:
   user: two
   text: MyString
   category: MyString
-  audio_url: MyString

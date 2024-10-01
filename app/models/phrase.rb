@@ -1,5 +1,6 @@
 class Phrase < ApplicationRecord
   belongs_to :user
+  belongs_to :voice, optional: true
 
   validates :text, presence: true
   validates :category, presence: true
@@ -22,6 +23,7 @@ class Phrase < ApplicationRecord
 
   def generate_audio(service)
     audio_content = service.text_to_speech(self.text)
+    self.update(voice_id: user.selected_voice.id) unless self.voice_id.eql?(user.selected_voice.id)
 
     if audio_content.present?
       self.audio.attach(io: StringIO.new(audio_content), filename: "#{SecureRandom.uuid}.mp3", content_type: "audio/mpeg")

@@ -3,11 +3,16 @@ module SetPlatform
 
   included do
     helper_method :platform
+    before_action :set_platform
   end
 
   private
     def platform
-      @platform ||= ApplicationPlatform.new(request.user_agent)
+      @platform
+    end
+
+    def set_platform
+      @platform = ApplicationPlatform.new(request.user_agent)
     end
 
     def mobile?

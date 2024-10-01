@@ -7,8 +7,8 @@
       </div>
       <div class="flex space-x-4">
         <% if user_signed_in? %>
-          <span class="text-gray-700 px-3 py-5 rounded-md <%= text_size_for("text-xs") %> font-medium">Hello, <%= link_to current_user.display_name, settings_profile_index_path, class: "text-indigo-700 px-1 py-5 rounded-md font-medium" %></span>
-          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "text-gray-700 px-3 py-5 rounded-md #{text_size_for("text-xs")} font-medium" %>
+          <span class="text-gray-700 px-3 py-5 rounded-md <%= text_size_for("text-xs") %> font-medium">Hello, <%= link_to current_user.display_name, settings_profile_index_path, class: "text-indigo-700 px-1 py-5 rounded-md font-medium", aria: { label: "Profile settings" } %></span>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "text-gray-700 px-3 py-5 rounded-md #{text_size_for("text-xs")} font-medium", data: { turbo: false } %>
         <% else %>
           <%= link_to "Sign Up", new_user_registration_path, class: "text-gray-700 px-3 py-5 rounded-md #{text_size_for("text-sm")} font-medium" %>
           <%= link_to "Login", new_user_session_path, class: "text-gray-700 px-3 py-5 rounded-md #{text_size_for("text-sm")} font-medium" %>

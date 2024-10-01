@@ -17,9 +17,9 @@ module User::VoiceServices
   def selected_voice
     if selected_voice_id.present?
       @voice ||= voice_service.voices.find_by(id: selected_voice_id)
-      @voice ||= voice_service.voices.first # fallback
+      @voice ||= voice_service.fallback_voice
     else
-      @voice ||= voice_service.voices.first
+      @voice ||= voice_service.fallback_voice
     end
   end
 end

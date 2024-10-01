@@ -4,6 +4,8 @@ class ElevenLabsService
 
     DEFAULT_VOICE_ID = "Wp52orDXakT0vizZyufK".freeze
   
+    attr_reader :voice_id
+
     # test with ElevenLabsService.new.text_to_speech("Hello, how are you?")
     def initialize(voice_id: default_voice_id)
       @api_key = ENV['ELEVEN_LABS_API_KEY'] || Rails.application.credentials.eleven_labs_api_key
