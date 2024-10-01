@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include User::VoiceServices, User::Avatar, User::Accessibility, User::Mentionable, User::Auth
+  include User::VoiceServices, User::Avatar, User::Accessibility, User::Mentionable, User::Auth, User::UserAccounts
 
   has_many :phrases, dependent: :destroy
 
@@ -9,6 +9,11 @@ class User < ApplicationRecord
     return last_name if last_name.present?
 
     "Anonymous"
+  end
+
+  def name
+    name = first_name
+    name += " #{last_name}" if last_name.present?
   end
 
   def phrase_categories

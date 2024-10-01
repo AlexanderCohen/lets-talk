@@ -30,7 +30,9 @@ end
 group :development do
   gem "web-console", ">= 4.1.0"
   gem "better_errors"
+  gem "awesome_print"
   gem "binding_of_caller"
+  gem "pry"
 
   # gem "rack-mini-profiler"
   # gem "spring"

@@ -8,6 +8,20 @@
         All fields are optional.
       </p>
     </div>
+
+    <%# Avatar %>
+    <div class="flex items-center">
+      <%= form.label :avatar, "Avatar", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <% if current_user.avatar.attached? %>
+          <div class="mb-4">
+            <%= image_tag current_user.avatar, class: "avatar rounded-full" %>
+          </div>
+        <% end %>
+        <%= form.file_field :avatar, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+
     <div class="flex items-center">
       <%= form.label :first_name, "First Name", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
