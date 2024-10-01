@@ -14,11 +14,6 @@ class ElevenLabsService
       @voice_id = voice_id
     end
 
-    def api
-      Api
-    end
-
-  
     def text_to_speech(text)
       body = {
         text: text,

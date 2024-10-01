@@ -4,7 +4,7 @@ module ProfileHelper
   end
 
   def current_voice
-    current_user.voice
+    current_user.selected_voice
   end
 
   def voice_service_options

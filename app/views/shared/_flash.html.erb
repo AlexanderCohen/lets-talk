@@ -1,4 +1,7 @@
 <% flash.each do |type, message| %>
+  <%# Prevent duplicate messages between shared/notice and shared/flash%>
+  <% next if message == notice %>
+
   <div class="flash <%= type %> bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4" role="alert">
     <%= message %>
   </div>
