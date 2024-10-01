@@ -17,7 +17,7 @@ class VoiceService < ApplicationRecord
   end
 
   def self.default_service
-    VoiceService::ElevenLabs
+    VoiceService.find_by(name: "Eleven Labs")
   end
 
   def service_klass

@@ -56,7 +56,7 @@
     <div class="flex items-center mt-4">
       <%= form.label :selected_voice_id, "Select Voice", class: "block font-medium text-gray-700 w-1/4" %>
       <div class="w-3/4">
-        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { selected: current_user.selected_voice_id || current_user.voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
+        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { selected: current_user.selected_voice_id || current_user.selected_voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 bg-white text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
       </div>
     </div>
     <%# Preview Voice %>

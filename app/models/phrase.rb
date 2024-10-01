@@ -49,6 +49,8 @@ class Phrase < ApplicationRecord
   private
 
     def set_default_category
-      self.category ||= "Uncategorised"
+      return unless self.category.blank?
+
+      self.category = "Uncategorised"
     end
 end
