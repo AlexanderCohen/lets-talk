@@ -19,6 +19,8 @@ class CreateVoices < ActiveRecord::Migration[7.0]
     end
 
     add_index :voices, [:voice_id, :type], unique: true
+
+    Rails.logger.info "Running VoiceService.setup"
     VoiceService.setup
   end
 
