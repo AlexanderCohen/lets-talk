@@ -11,7 +11,7 @@
   <% end %>
   <div class="flex flex-col lg:flex-row">
     <%# Todo: Revamp the Category Select, it isn't very intuitive %>
-    <div class="flex-1 mr-3 mt-3">
+    <div class="flex-1 mt-3">
       <%= form.label :text, class: "sr-only" %>
       <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")} font-light", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
     </div>
