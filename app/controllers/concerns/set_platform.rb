@@ -9,4 +9,12 @@ module SetPlatform
     def platform
       @platform ||= ApplicationPlatform.new(request.user_agent)
     end
+
+    def mobile?
+      @platform.mobile?
+    end
+
+    def desktop?
+      @platform.desktop?
+    end
 end

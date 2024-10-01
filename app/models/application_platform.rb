@@ -30,8 +30,6 @@ class ApplicationPlatform < PlatformAgent
 
   def apple_messages?
     # Apple Messages pretends to be Facebook and Twitter bots via spoofed user agent.
-    # We want to avoid showing "Unsupported browser" message when a Campfire link
-    # is shared via Messages.
     match?(/facebookexternalhit/i) && match?(/Twitterbot/i)
   end
 
