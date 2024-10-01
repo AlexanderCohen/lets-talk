@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+
   resources :phrases do
     collection do
       get :archived
@@ -9,8 +10,7 @@ Rails.application.routes.draw do
       patch :unarchive
     end
   end
-  root to: "phrases#index"
-
+  
   resources :profile, only: [] do
     collection do
       get :settings
@@ -18,9 +18,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
-
+  get "about", to: "static#about"
+  root to: "phrases#index" # setup a Dashboard page later
 end
