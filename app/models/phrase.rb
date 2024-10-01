@@ -21,11 +21,6 @@ class Phrase < ApplicationRecord
   end
 
   def generate_audio(service)
-    if text.blank?
-      errors.add(:base, "Text is required to generate audio")
-      return
-    end
-
     audio_content = service.text_to_speech(self.text)
 
     if audio_content.present?
