@@ -1,6 +1,6 @@
 @layer components {
   .expandable-header {
-    @apply flex justify-between items-center cursor-pointer p-4 rounded-lg shadow-md;
+    @apply flex justify-between items-center cursor-pointer p-4 rounded-lg shadow-md z-10;
 
     &.primary {
       @apply bg-indigo-600 text-white;
@@ -13,17 +13,17 @@
     &.tertiary {
       @apply bg-tertiary-600 text-white;
     }
+
+    &.thin {
+      @apply py-1 px-4;
+    }
   }
 
   .expandable-content {
-    @apply overflow-hidden transition-[max-height] duration-300 ease-in-out font-bold px-2 translate-y-[-4px] rounded-b-md;
+    @apply overflow-hidden transition-[max-height] duration-300 ease-in-out font-bold px-2 translate-y-[-4px] rounded-b-md z-0;
 
     &.inset {
       @apply ml-4;
-    }
-
-    &.border {
-      @apply border-l-2 border-r-2 border-b-2 border-secondary-300;
     }
 
     &.primary {
@@ -31,7 +31,7 @@
     }
 
     &.secondary {
-      @apply bg-secondary-200 border-secondary-300;
+      @apply bg-secondary-200;
     }
   }
 }

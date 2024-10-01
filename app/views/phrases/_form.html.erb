@@ -15,8 +15,8 @@
       <%= form.label :text, class: "sr-only" %>
       <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")}", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
     </div>
-    <div class="flex-1">
-      <%= form.label :category, class: "#{text_size_for("text-lg")}" %>
+    <div class="flex-1  mt-4">
+      <%= form.label :category, class: "#{text_size_for("text-lg")} sr-only" %>
       <div class="mt-2 flex flex-col rounded-md shadow-sm justify-between space-y-3">
         <%= form.select :category,
                         options_for_select(@categories, selected: phrase.category),
