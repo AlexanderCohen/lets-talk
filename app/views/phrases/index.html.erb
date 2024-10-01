@@ -5,7 +5,7 @@
   <div data-controller="expandable" data-expandable-default-expanded-value="true" class="mb-8">
     <%# Expandable Header %>
     <div data-action="click->expandable#toggle" class="expandable-header primary">
-      <h2 class="text-2xl font-bold mb-4">Create New Phrase</h2>
+      <h2 class="text-2xl font-bold my-2">Create New Phrase</h2>
       <svg data-expandable-target="icon" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
       </svg>
@@ -18,13 +18,13 @@
   </div>
   <div id="phrases_list" data-phrase-target="phrasesList">
     <% @phrases.group_by(&:category).each do |category, phrases| %>
-      <div class="mb-6" data-controller="expandable" data-expandable-default-expanded-value="false">
+      <div class="mb-3" data-controller="expandable" data-expandable-default-expanded-value="false">
         <%# Expandable Header %>
         <div 
           data-action="click->expandable#toggle" 
           class="expandable-header secondary thin"
         >
-          <h3 class="text-2xl font-bold mb-4"><%= category.capitalize %></h3>
+          <h3 class="text-2xl font-bold my-2"><%= category.capitalize %></h3>
           <svg data-expandable-target="icon" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>

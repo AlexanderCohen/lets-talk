@@ -13,7 +13,7 @@
     <%# Todo: Revamp the Category Select, it isn't very intuitive %>
     <div class="flex-1 mr-3 mt-3">
       <%= form.label :text, class: "sr-only" %>
-      <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")}", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
+      <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")} font-light", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
     </div>
     <div class="flex-1  mt-4">
       <%= form.label :category, class: "#{text_size_for("text-lg")} sr-only" %>
@@ -21,13 +21,13 @@
         <%= form.select :category,
                         options_for_select(@categories, selected: phrase.category),
                         { include_blank: "Select or create new category" },
-                        class: "text-lg",
+                        class: "font-light #{text_size_for("text-lg")}",
                         data: { action: "change->phrase#toggleNewCategory" },
                         aria: { label: "Category" } %>
         <%= form.label :new_category, class: "sr-only" %>
         <%= form.text_field :new_category,
                           placeholder: "Create new category",
-                          class: "block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-lg",
+                          class: "block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light #{text_size_for("text-lg")}",
                           data: { phrase_target: "newCategory" },
                           aria: { label: "New category" } %>
       </div>
