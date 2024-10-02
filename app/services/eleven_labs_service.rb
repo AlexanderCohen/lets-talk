@@ -1,36 +1,32 @@
 class ElevenLabsService
     include HTTParty
     base_uri 'https://api.elevenlabs.io'
+
+    DEFAULT_VOICE_ID = "Wp52orDXakT0vizZyufK".freeze
   
+    attr_reader :voice_id
+
     # test with ElevenLabsService.new.text_to_speech("Hello, how are you?")
-    def initialize
+    def initialize(voice_id: default_voice_id)
       @api_key = ENV['ELEVEN_LABS_API_KEY'] || Rails.application.credentials.eleven_labs_api_key
       @headers = {
-        "Accept": "audio/mpeg",
-        "Content-Type": "application/json",
-        "xi-api-key": "#{@api_key}"
+        "Accept": "audio/mpeg", "Content-Type": "application/json", "xi-api-key": "#{@api_key}"
       }
-      ## Replace this with your own voice id or just use the default.
-      @voice_id = "Wp52orDXakT0vizZyufK"
+
+      @voice_id = voice_id
     end
-  
+
     def text_to_speech(text)
       body = {
-        text: text,
-        model_id: "eleven_turbo_v2_5",
-        voice_id: @voice_id,
-        voice_settings: {
-          stability: 0.7,
-          similarity_boost: 1.0
-        }
+        text: text, model_id: "eleven_turbo_v2_5", voice_id: @voice_id,
+        voice_settings: { stability: 0.7, similarity_boost: 1.0 }
       }
       path = "/v1/text-to-speech/#{@voice_id}"
-      puts path
+
       response = self.class.post(path, headers: @headers, body: body.to_json)
       case response.code
       when 200
-        # Return the MP3 file content directly
-        response.body
+        response.body # Return the MP3 file content directly
       when 429
         Rails.logger.warn "Eleven Labs API rate limit exceeded."
         nil
@@ -42,4 +38,20 @@ class ElevenLabsService
       Rails.logger.error "Eleven Labs API Exception: #{e.message}"
       nil
     end
+
+    def list_voices
+      path = "/v1/voices"
+      response = self.class.get(path, headers: @headers)
+      parsed_voices = JSON.parse(response.body) || {}
+      parsed_voices.dig("voices")
+    rescue JSON::ParserError => e
+      Rails.logger.error "Eleven Labs API Error #{e.message}"
+      []
+    end
+
+    private
+
+      def default_voice_id
+        Current.user&.selected_voice&.voice_id || DEFAULT_VOICE_ID
+      end
   end

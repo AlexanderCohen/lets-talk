@@ -1,0 +1,88 @@
+
+
+<%= form_with url: profile_index_path, method: :patch, local: true, html: { class: "space-y-6" } do |form| %>
+  <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "personal-information" do %>
+    <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Personal Information</h3>
+    <div class="flex items-center mb-4 p-2 rounded-md bg-blue-100 text-blue-800">
+      <p class="<%= text_size_for("text-sm") %>">
+        All fields are optional.
+      </p>
+    </div>
+
+    <%# Avatar %>
+    <div class="flex items-center">
+      <%= form.label :avatar, "Avatar", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <% if current_user.avatar.attached? %>
+          <div class="mb-4">
+            <%= image_tag current_user.avatar, class: "avatar rounded-full" %>
+          </div>
+        <% end %>
+        <%= form.file_field :avatar, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+      </div>
+    </div>
+
+    <div class="flex items-center">
+      <%= form.label :first_name, "First Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.text_field :first_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md", value: current_user.first_name %>
+      </div>
+    </div>
+    <div class="flex items-center">
+      <%= form.label :last_name, "Last Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.text_field :last_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md", value: current_user.last_name %>
+      </div>
+    </div>
+    <div class="flex items-center">
+      <%= form.label :preferred_name, "Preferred Name", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.text_field :preferred_name, class: "text-gray-700 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md", value: current_user.preferred_name %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "accessibility-settings" do %>
+    <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Accessibility Settings</h2>
+    <div class="flex items-center">
+      <%= form.label :text_size_modifier, "Font Size", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.select :text_size_modifier, text_size_modifier_options, { include_blank: "Please select", selected: current_user.text_size_modifier }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md" } %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= tag.div class: "rounded-md bg-gray-200 p-4 #{text_size_for("text-sm")}", id: "voice-settings" do %>
+    <h2 class="<%= text_size_for("text-lg") %> text-indigo-800 font-medium text-gray-700 ml-6 mb-4">Voice Settings</h2>
+
+    <div class="flex items-center mb-4 p-2 rounded-md bg-blue-100 text-blue-800">
+      <p class="<%= text_size_for("text-sm") %>">
+        Note: Changing the voice settings here will currently not update existing phrases. The new settings will only apply to newly created phrases.
+      </p>
+    </div>
+
+    <div class="flex items-center">
+      <%= form.label :selected_service_id, "Select Service", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.select :selected_service_id, voice_service_options, { selected: current_voice_service.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md" } %>
+      </div>
+    </div>
+    <div class="flex items-center mt-4">
+      <%= form.label :selected_voice_id, "Select Voice", class: "block font-medium text-gray-700 w-1/4" %>
+      <div class="w-3/4">
+        <%= form.select :selected_voice_id, current_user.voice_service.voices.pluck('voices.name', 'voices.id'), { selected: current_user.selected_voice_id || current_user.selected_voice.id }, { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  rounded-md", onchange: "this.form.requestSubmit()" } %>
+      </div>
+    </div>
+    <%# Preview Voice %>
+    <div class="flex items-center mt-4 p-1 rounded-md bg-primary-400 text-white">
+      <%= form.label :preview_voice, "Preview Voice", class: "block font-medium w-1/4 text-white ml-1" %>
+      <div class="w-3/4">
+        <%= audio_tag current_user.selected_voice.audio_sample_url, controls: true, class: "mt-1 block w-full rounded-md border border-gray-300" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex justify-end mt-6">
+    <%= form.submit "Save Changes", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+<% end %>
