@@ -1,4 +1,4 @@
-class Accounts::JoinCodesController < ApplicationController
+class Account::JoinCodesController < ApplicationController
   before_action :authenticate_user!
 
   def create
