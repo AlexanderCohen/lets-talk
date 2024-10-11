@@ -16,9 +16,8 @@
     <% if alert %>
       <%= render 'shared/alert', message: alert %>
     <% end %>
-
     <div class="w-full flex flex-col min-h-screen">
-      <main class="container mx-auto px-4 pt-6 mb-12 flex-grow">
+      <main class="container mx-auto md:px-4 md:pt-6 mb-12 flex-grow">
         <%= yield %>
       </main>
       <%= render partial: "shared/footer" %>

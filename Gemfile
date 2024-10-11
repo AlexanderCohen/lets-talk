@@ -56,3 +56,5 @@ gem 'font-awesome-sass', '~> 6.4.0'
 
 gem "aws-sdk-s3", require: false
 gem 'redis'
+
+gem "ruby-openai"

@@ -1,0 +1,11 @@
+<ul class="list-disc pl-5 z-50">
+  <% suggestions.each do |suggestion| %>
+    <li 
+      class="text-sm text-gray-600 cursor-pointer hover:bg-gray-100 p-2 rounded" 
+      data-action="click->phrase-suggestion#selectSuggestion" 
+      data-suggestion="<%= suggestion %>"
+      >
+      <%= suggestion %>
+    </li>
+  <% end %>
+</ul>

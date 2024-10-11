@@ -24,7 +24,6 @@ export default class extends Controller {
   }
 
   expand() {
-    this.contentTarget.style.maxHeight = `${this.contentTarget.scrollHeight}px`
     this.iconTarget.style.transform = "rotate(180deg)"
     this.expanded = true
   }

@@ -4,4 +4,5 @@
   <%= turbo_stream.prepend "category_#{@phrase.category.parameterize}", partial: "phrases/phrase", locals: { phrase: @phrase } %>
 <% end %>
 <%= turbo_stream.update "new_phrase_form", partial: "phrases/form", locals: { phrase: Phrase.new } %>
+<%= turbo_stream.update "last_phrase_display", partial: "phrases/phrase", locals: { phrase: @phrase } %>
 <%= turbo_stream.update "flash_messages", partial: "shared/flash" %>
