@@ -81,6 +81,23 @@ class PhrasesController < ApplicationController
       @archived_phrases = current_user.phrases.where(archived: true).order(created_at: :desc)
     end
   
+    def fetch_suggestions
+      phrase = params[:phrase]
+      
+      # Dummy suggestions for now
+      suggestions = OpenAiService.new.suggest_phrase_completions(phrase)
+      
+      suggestions = Array(suggestions)
+      suggestions = suggestions.first if suggestions.size == 1 && suggestions.first.is_a?(Array)
+      suggestions = suggestions.compact.uniq
+
+      render turbo_stream: turbo_stream.update(
+        "suggestions",
+        partial: "phrases/suggestions",
+        locals: { suggestions: suggestions }
+      )
+    end
+  
     private
   
       def set_phrase

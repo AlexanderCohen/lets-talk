@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       patch :unarchive
     end
   end
+  post :fetch_suggestions, to: "phrases#fetch_suggestions"
   
   resources :profile, only: [] do
     collection do

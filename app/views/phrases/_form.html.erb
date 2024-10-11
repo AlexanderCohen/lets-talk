@@ -1,4 +1,9 @@
-<%= form_with(model: phrase, local: false, data: { phrase_target: "form", action: "submit->phrase#createPhrase" }, class: "space-y-1 mb-2") do |form| %>
+<%= form_with(model: phrase, local: false, data: { 
+    phrase_target: "form", 
+    action: "submit->phrase#createPhrase", 
+    controller: "phrase-suggestion", 
+    phrase_suggestion_url_value: fetch_suggestions_path 
+}, class: "space-y-1 mb-2") do |form| %>
   <% if phrase.errors.any? %>
     <div class="error-messages bg-red-100 text-red-700 p-4 rounded mb-6" role="alert" aria-live="assertive">
       <h2 class="text-lg font-bold"><%= pluralize(phrase.errors.count, "error") %> prohibited this phrase from being saved:</h2>
@@ -13,7 +18,15 @@
     <%# Todo: Revamp the Category Select, it isn't very intuitive %>
     <div class="flex-1">
       <%= form.label :text, class: "sr-only" %>
-      <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")} font-light", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
+      <%= form.text_area :text, 
+                          rows: 3, 
+                          class: "#{text_size_for("text-lg")} font-light", 
+                          placeholder: "Enter your new phrase here...", 
+                          aria: { label: "Phrase text" }, 
+                          data: { 
+                            phrase_suggestion_target: "input", 
+                            action: "input->phrase-suggestion#typing" 
+                          } %>
     </div>
     <div class="flex-1 mt-1">
       <%= form.label :category, class: "#{text_size_for("text-lg")} sr-only" %>
@@ -37,4 +50,5 @@
     <%= link_to 'View Archived Phrases', archived_phrases_path, class: "btn-outline text-sm font-gray-600", aria: { label: "View Archived Phrases" } %>
     <%= form.submit phrase.new_record? ? "Save Phrase" : "Update Phrase", class: "btn btn-primary #{text_size_for("text-lg")}", aria: { label: phrase.new_record? ? "Save Phrase" : "Update Phrase" } %>
   </div>
+  <div id="suggestions" data-phrase-suggestion-target="suggestions" class="mt-2"></div>
 <% end %>
