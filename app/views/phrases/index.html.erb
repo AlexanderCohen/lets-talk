@@ -2,7 +2,7 @@
   <div id="flash_messages">
     <%= render "shared/flash" %>
   </div>
-  <div data-controller="expandable" data-expandable-default-expanded-value="true" class="mb-8">
+  <div data-controller="expandable" data-expandable-default-expanded-value="true" class="mb-2">
     <%# Expandable Header %>
     <div data-action="click->expandable#toggle" class="expandable-header primary">
       <h2 class="text-2xl font-bold my-2">Create New Phrase</h2>
@@ -14,10 +14,12 @@
     <div id="new_phrase_form" data-expandable-target="content" class="expandable-content primary">
       <%= render 'form', phrase: Phrase.new %>
     </div>
+    <div id='last_phrase_display' class='my-3'>
+    </div>
   </div>
   <div id="phrases_list" data-phrase-target="phrasesList">
     <% @phrases.group_by(&:category).each do |category, phrases| %>
-      <%= render partial: 'category', locals: { category: category, phrases: phrases, expanded: false } %>
+      <%= render partial: 'category', locals: { category: category, phrases: phrases, expanded: true } %>
     <% end %>
   </div>
 </div>

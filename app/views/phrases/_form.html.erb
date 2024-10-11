@@ -1,4 +1,4 @@
-<%= form_with(model: phrase, local: false, data: { phrase_target: "form", action: "submit->phrase#createPhrase" }, class: "space-y-6 mb-2") do |form| %>
+<%= form_with(model: phrase, local: false, data: { phrase_target: "form", action: "submit->phrase#createPhrase" }, class: "space-y-1 mb-2") do |form| %>
   <% if phrase.errors.any? %>
     <div class="error-messages bg-red-100 text-red-700 p-4 rounded mb-6" role="alert" aria-live="assertive">
       <h2 class="text-lg font-bold"><%= pluralize(phrase.errors.count, "error") %> prohibited this phrase from being saved:</h2>
@@ -11,13 +11,13 @@
   <% end %>
   <div class="flex flex-col">
     <%# Todo: Revamp the Category Select, it isn't very intuitive %>
-    <div class="flex-1 mt-3">
+    <div class="flex-1">
       <%= form.label :text, class: "sr-only" %>
       <%= form.text_area :text, rows: 3, class: "#{text_size_for("text-lg")} font-light", placeholder: "Enter your new phrase here...", aria: { label: "Phrase text" } %>
     </div>
-    <div class="flex-1  mt-4">
+    <div class="flex-1 mt-1">
       <%= form.label :category, class: "#{text_size_for("text-lg")} sr-only" %>
-      <div class="mt-2 flex flex-col rounded-md shadow-sm justify-between space-y-3 lg:flex-row lg:space-y-0 lg:space-x-3">
+      <div class="mt-2 flex flex-col rounded-md shadow-sm justify-between space-y-1 lg:flex-row lg:space-y-0 lg:space-x-3">
         <%= form.select :category,
                         options_for_select(@categories, selected: phrase.category),
                         { include_blank: "Select or create new category" },
@@ -34,7 +34,7 @@
     </div>
   </div>
   <div class="flex flex-row justify-between items-center mt-4 gap-x-6">
+    <%= link_to 'View Archived Phrases', archived_phrases_path, class: "btn-outline text-sm font-gray-600", aria: { label: "View Archived Phrases" } %>
     <%= form.submit phrase.new_record? ? "Save Phrase" : "Update Phrase", class: "btn btn-primary #{text_size_for("text-lg")}", aria: { label: phrase.new_record? ? "Save Phrase" : "Update Phrase" } %>
-    <%= link_to 'View Archived Phrases', archived_phrases_path, class: "btn btn-secondary", aria: { label: "View Archived Phrases" } %>
   </div>
 <% end %>

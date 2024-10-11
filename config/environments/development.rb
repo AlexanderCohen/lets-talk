@@ -71,6 +71,9 @@ Rails.application.configure do
   config.hosts << "lvh.me"
   config.hosts << "localhost"
 
+  #allow ngrok
+  config.hosts << /.*\.ngrok-free\.app/
+
   # Use a configurable host
   config.action_mailer.default_url_options = { host: ENV['APP_HOST'] || 'localhost', port: ENV['PORT'] || 3000 }
 

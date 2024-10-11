@@ -8,7 +8,8 @@ export default class extends Controller {
         console.log("Phrases controller connected")
         this.currentAudio = null
         this.currentPlayingCard = null
-        this.initializeSortable()
+        // Disable drag and drop for now until we can figure out a good UI for mobile.
+        // this.initializeSortable()
     }
 
     initializeSortable() {
@@ -194,28 +195,28 @@ export default class extends Controller {
     }
 
     // Allow the User to drag and drop phrases into different categories
-    handleDragEnd(event) {
-        const phraseId = event.item.id.split('_')[1]
-        const newCategory = event.to.dataset.category
+    // handleDragEnd(event) {
+    //     const phraseId = event.item.id.split('_')[1]
+    //     const newCategory = event.to.dataset.category
 
-        // Update the containers maxHeight to the new scrollHeight (which is set by expandable_controller)
-        event.to.style.maxHeight = `${event.to.scrollHeight}px`
+    //     // Update the containers maxHeight to the new scrollHeight (which is set by expandable_controller)
+    //     event.to.style.maxHeight = `${event.to.scrollHeight}px`
 
-        fetch(`/phrases/${phraseId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ phrase: { category: newCategory } })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update phrase category')
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error)
-        })
-    }
+    //     fetch(`/phrases/${phraseId}`, {
+    //         method: 'PATCH',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+    //         },
+    //         body: JSON.stringify({ phrase: { category: newCategory } })
+    //     })
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('Failed to update phrase category')
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error)
+    //     })
+    // }
 }
