@@ -138,7 +138,10 @@ export default class extends Controller {
 
         try {
             console.log('Attempting to fetch audio file...');
-            const response = await fetch(audioUrl);
+            const response = await fetch(audioUrl, {
+                mode: 'cors', // Add this line to explicitly set CORS mode
+                credentials: 'same-origin' // Add this line to include cookies if needed
+            });
             console.log('Fetch response:', response);
 
             if (!response.ok) {
