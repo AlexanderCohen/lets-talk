@@ -58,3 +58,6 @@ gem "aws-sdk-s3", require: false
 gem 'redis'
 
 gem "ruby-openai"
+
+# Add this with your other gems
+gem 'rack-cors'

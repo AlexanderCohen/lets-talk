@@ -6,20 +6,51 @@
 
 Rails.application.configure do
   config.content_security_policy do |policy|
+    # Base configuration
     policy.default_src :self, :https
     policy.font_src    :self, :https, :data
     policy.img_src     :self, :https, :data
     policy.object_src  :none
-    policy.script_src  :self, :https, "https://lets-talk-prod.s3.ap-southeast-2.amazonaws.com"
-    policy.style_src   :self, :https
-    # Specify URI for violation reports
-    # policy.report_uri "/csp-violation-report-endpoint"
+    policy.script_src  :self, :https, "'unsafe-inline'", "'unsafe-eval'"
+    policy.style_src   :self, :https, "'unsafe-inline'"
+
+    # Build connect sources based on environment
+    connect_sources = [:self, :https]
+    if Rails.env.development?
+      connect_sources.push(
+        "http://lvh.me:3000",
+        "ws://lvh.me:3000",
+        "http://localhost:3000",
+        "ws://localhost:3000"
+      )
+    end
+
+    if Rails.env.production?
+      connect_sources.push(
+        "https://lets-talk-together.com",
+        "wss://lets-talk-together.com",
+        "https://lets-talk-prod.s3.ap-southeast-2.amazonaws.com"
+      )
+    end
+
+    policy.connect_src(*connect_sources)
+
+    # Media sources
+    media_sources = [:self, :https]
+    if Rails.env.development?
+      media_sources.push("http://lvh.me:3000", "http://localhost:3000")
+    else
+      media_sources.push("https://lets-talk-together.com")
+    end
+    media_sources.push("https://lets-talk-prod.s3.ap-southeast-2.amazonaws.com")
+    
+    policy.media_src(*media_sources)
   end
 
-  # Generate session nonces for permitted importmap and inline scripts
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  config.content_security_policy_nonce_directives = %w(script-src)
+  # Remove nonce generation as we're using unsafe-inline
+  config.content_security_policy_nonce_generator = nil
+  config.content_security_policy_nonce_directives = []
 
-  # Report violations without enforcing the policy.
-  # config.content_security_policy_report_only = true
+  # Report CSP violations in production
+  config.content_security_policy_report_only = Rails.env.development?
 end
