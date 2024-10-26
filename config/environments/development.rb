@@ -86,4 +86,26 @@ Rails.application.configure do
   config.active_storage.service = :local
   # config.active_storage.service = :amazon
   config.action_mailer.default_url_options = { host: 'lvh.me', port: 3000 }
+
+  # Disable CSP in development
+  
+
+  # OR completely disable CSP in development (not recommended for production)
+  # config.content_security_policy = false
+
+  # Allow Active Storage URLs to work across domains in development
+  config.action_controller.default_url_options = { host: 'lvh.me', port: 3000 }
+  config.active_storage.service_urls_expire_in = 1.hour
+
+  # Add CORS headers for Active Storage
+
+
+  # Set consistent URL options
+  config.action_controller.default_url_options = { host: 'lvh.me', port: 3000 }
+  config.active_storage.default_url_options = { host: 'lvh.me', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'lvh.me', port: 3000 }
+
+  # Active Storage configuration
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  config.active_storage.service_urls_expire_in = 1.hour
 end

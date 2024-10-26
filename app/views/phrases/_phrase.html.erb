@@ -2,15 +2,24 @@
     class="bg-white pt-2 px-2 pb-2 rounded-lg shadow-lg cursor-pointer transition duration-300 ease-in-out transform hover:bg-gray-200 w-full md:max-w-96"
     data-phrase-target="playButton"
     data-action="click->phrase#play"
-  data-audio-url="<%= phrase.audio_url %>"
-  style="display: flex; flex-direction: column; justify-content: space-between;"
+    data-audio-url="<%= rails_blob_path(phrase.audio, disposition: 'attachment') if phrase.audio.attached? %>"
+    data-phrase-id="<%= phrase.id %>"
+    style="display: flex; flex-direction: column; justify-content: space-between;"
   >
   <span data-phrase-target="playStatus" class="text-gray-300 text-xs <%= text_size_for("text-base") %>">
     <i class="fas fa-play-circle mr-2 inline-block max-w-4"></i><span class="inline-block">Click to play</span>
   </span>
+
   <p class="<%= text_size_for("text-xl") %> mb-2 font-light text-gray-800 leading-relaxed"><%= phrase.text&.capitalize %></p>
   <div class="flex justify-between items-center mt-0">
-    <%= button_tag type: 'button', class: "text-gray-600 hover:text-blue-600 transition duration-300 h-8 w-8", title: "Share", data: { action: "click->phrase#share", phrase_text: phrase.text, phrase_audio: phrase.audio_url } do %>
+    <%= button_tag type: 'button', 
+        class: "text-gray-600 hover:text-blue-600 transition duration-300 h-8 w-8", 
+        title: "Share", 
+        data: { 
+            action: "click->phrase#share",
+            phrase_id: phrase.id,
+            phrase_text: phrase.text
+        } do %>
       <i class="fas fa-share-alt h-5 w-5"></i>
     <% end %>
     <div class="flex flex-row space-x-4">
