@@ -111,4 +111,39 @@ class PhrasesController < ApplicationController
       def phrase_params
         params.require(:phrase).permit(:text, :category, :new_category)
       end
+
+    def audio
+      @phrase = Phrase.find(params[:id])
+      
+      respond_to do |format|
+        format.json do
+          if @phrase.audio.attached?
+            # Generate a short-lived URL for the audio
+            blob = @phrase.audio.blob
+            audio_data = {
+              url: rails_blob_path(blob, disposition: "attachment"),
+              filename: blob.filename.to_s,
+              content_type: blob.content_type,
+              byte_size: blob.byte_size
+            }
+            
+            render json: audio_data
+          else
+            render json: { error: 'No audio attached' }, status: :not_found
+          end
+        end
+        
+        # Direct binary response for sharing
+        format.binary do
+          if @phrase.audio.attached?
+            send_data @phrase.audio.download,
+                     filename: @phrase.audio.filename.to_s,
+                     content_type: @phrase.audio.content_type,
+                     disposition: 'attachment'
+          else
+            head :not_found
+          end
+        end
+      end
+    end
   end

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     member do
       patch :archive
       patch :unarchive
+      get :audio, defaults: { format: :json }
     end
   end
   post :fetch_suggestions, to: "phrases#fetch_suggestions"

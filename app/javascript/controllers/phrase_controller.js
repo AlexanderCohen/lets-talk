@@ -6,10 +6,16 @@ export default class extends Controller {
 
     connect() {
         console.log("Phrases controller connected")
+        this.initializeState()
+        // disabling sortable for now and ensure that we can re-enable it later
+        // this.initializeSortable()
+    }
+
+    // Initialize controller state
+    initializeState() {
         this.currentAudio = null
         this.currentPlayingCard = null
-        // Disable drag and drop for now until we can figure out a good UI for mobile.
-        // this.initializeSortable()
+        this.audioCache = new Map() // Cache for blob URLs
     }
 
     initializeSortable() {
@@ -22,204 +28,251 @@ export default class extends Controller {
         })
     }
 
-    play(event) {
-        const card = event.currentTarget
-        const audioUrl = card.dataset.audioUrl
-        const playStatus = card.querySelector('[data-phrase-target="playStatus"]')
-        console.log("Card clicked, audio URL:", audioUrl)
+    // Audio playback handling
+    async play(event) {
+        try {
+            const card = event.currentTarget
+            const audioUrl = card.dataset.audioUrl
+            const playStatus = card.querySelector('[data-phrase-target="playStatus"]')
 
-        // Stop current audio if it's playing
-        if (this.currentAudio) {
-            this.currentAudio.pause()
-            this.currentAudio.currentTime = 0
-            if (this.currentPlayingCard) {
-                this.currentPlayingCard.querySelector('[data-phrase-target="playStatus"]').textContent = "Click to play"
-                this.currentPlayingCard.classList.remove('bg-green-100')
+            if (!audioUrl) {
+                console.warn("No audio URL available")
+                return
             }
+
+            // Handle interruption of current playback
+            await this.stopCurrentAudio()
+
+            // If clicking the same card that was playing, just stop
+            if (this.currentPlayingCard === card) {
+                this.resetPlaybackState()
+                return
+            }
+
+            // Fetch and play new audio
+            await this.fetchAndPlayAudio(audioUrl, card, playStatus)
+        } catch (error) {
+            console.error("Error in play handler:", error)
+            alert("Error playing audio. Please try again.")
         }
+    }
 
-        // If the clicked card is already playing, just stop and return
-        if (this.currentPlayingCard === card) {
-            this.currentAudio = null
-            this.currentPlayingCard = null
-            return
+    async stopCurrentAudio() {
+        if (this.currentAudio) {
+            await this.currentAudio.pause()
+            this.currentAudio.currentTime = 0
+            this.updatePlayingCardState(false)
         }
+    }
 
-        // Play the new audio
-        if (audioUrl) {
-            const audio = new Audio(audioUrl)
-            audio.play().then(() => {
-                console.log("Audio playing successfully")
-                playStatus.textContent = "Playing..."
-                card.classList.add('bg-green-100')
-                this.currentAudio = audio
-                this.currentPlayingCard = card
+    updatePlayingCardState(isPlaying) {
+        if (this.currentPlayingCard) {
+            const status = this.currentPlayingCard.querySelector('[data-phrase-target="playStatus"]')
+            status.textContent = isPlaying ? "Playing..." : "Click to play"
+            this.currentPlayingCard.classList.toggle('bg-green-100', isPlaying)
+        }
+    }
 
-                audio.onended = () => {
-                    playStatus.textContent = "Click to play"
-                    card.classList.remove('bg-green-100')
-                    this.currentAudio = null
-                    this.currentPlayingCard = null
+    async fetchAndPlayAudio(audioUrl, card, playStatus) {
+        try {
+            const response = await fetch(audioUrl, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'audio/mpeg,audio/*;q=0.8,*/*;q=0.5',
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
                 }
-            }).catch(error => {
-                console.error("Error playing audio:", error)
-                // Not sure why, but after an hour or so, we get an error when trying to play the file.
-                // Suspect creating a new Audio(audioUrl) for each link on page load may resolve the issue.
-                alert("Error playing audio. Please try refreshing the page then trying again.")
             })
-        } else {
-            console.log("No audio URL available")
-            alert("Audio not available.")
+
+            if (!response.ok) throw new Error('Failed to fetch audio')
+
+            const blob = await response.blob()
+            const blobUrl = URL.createObjectURL(blob)
+
+            const audio = new Audio(blobUrl)
+
+            // Set up audio event handlers
+            audio.onended = () => this.handleAudioEnd(card, playStatus, blobUrl)
+            audio.onerror = () => this.handleAudioError(blobUrl)
+
+            // Play the audio
+            await audio.play()
+
+            // Update state
+            this.currentAudio = audio
+            this.currentPlayingCard = card
+            this.updatePlayingCardState(true)
+
+            console.log("Audio playing successfully")
+        } catch (error) {
+            console.error("Error in fetchAndPlayAudio:", error)
+            throw error
         }
     }
 
-    stopPropagation(event) {
-        event.stopPropagation();
+    handleAudioEnd(card, playStatus, blobUrl) {
+        playStatus.textContent = "Click to play"
+        card.classList.remove('bg-green-100')
+        this.resetPlaybackState()
+        URL.revokeObjectURL(blobUrl)
     }
 
+    handleAudioError(blobUrl) {
+        console.error("Audio playback error")
+        this.resetPlaybackState()
+        URL.revokeObjectURL(blobUrl)
+    }
+
+    resetPlaybackState() {
+        this.currentAudio = null
+        this.currentPlayingCard = null
+    }
+
+    // Sharing functionality
+    async share(event) {
+        event.preventDefault()
+        const button = event.currentTarget
+        const phraseId = button.dataset.phraseId
+        const text = button.dataset.phraseText
+
+        try {
+            const audioData = await this.fetchAudioMetadata(phraseId)
+            await this.handleSharing(phraseId, text, audioData)
+        } catch (error) {
+            console.error('Error sharing audio:', error)
+            alert('Sorry, there was a problem sharing the audio. Please try again.')
+        }
+    }
+
+    async fetchAudioMetadata(phraseId) {
+        const response = await fetch(`/phrases/${phraseId}/audio`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        if (!response.ok) throw new Error('Failed to fetch audio metadata')
+        return response.json()
+    }
+
+    async handleSharing(phraseId, text, audioData) {
+        if (navigator.share) {
+            try {
+                const file = await this.prepareAudioFile(phraseId, audioData)
+                await navigator.share({ text, files: [file] })
+            } catch (shareError) {
+                if (shareError.name !== 'AbortError') {
+                    this.downloadAudio(audioData.url, audioData.filename)
+                }
+            }
+        } else {
+            this.downloadAudio(audioData.url, audioData.filename)
+        }
+    }
+
+    async prepareAudioFile(phraseId, audioData) {
+        const response = await fetch(`/phrases/${phraseId}/audio`, {
+            headers: { 'Accept': 'application/octet-stream' }
+        })
+        if (!response.ok) throw new Error('Failed to fetch audio file')
+
+        const blob = await response.blob()
+        return new File([blob], audioData.filename, {
+            type: audioData.content_type
+        })
+    }
+
+    // Utility methods
+    stopPropagation(event) {
+        event.stopPropagation()
+    }
+
+    downloadAudio(url, filename) {
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
+    // Category management
     toggleNewCategory(event) {
         const selectedValue = event.target.value
-        if (selectedValue === "") {
-            this.newCategoryTarget.style.display = "block"
-        } else {
-            this.newCategoryTarget.style.display = "none"
-            this.newCategoryTarget.value = "" // Clear the new category input when an existing category is selected
+        const newCategoryField = this.newCategoryTarget
+
+        newCategoryField.style.display = selectedValue === "" ? "block" : "none"
+        if (selectedValue !== "") {
+            newCategoryField.value = ""
         }
     }
 
-    createPhrase(event) {
+    // Form submission
+    async createPhrase(event) {
         event.preventDefault()
         const form = event.target
         const formData = new FormData(form)
 
-        // If a new category is entered, use it instead of the selected category
+        // Handle new category
         const newCategory = formData.get('phrase[new_category]')
         if (newCategory) {
             formData.set('phrase[category]', newCategory)
         }
 
-        fetch(form.action, {
-            method: form.method,
-            body: formData,
-            headers: {
-                "Accept": "text/vnd.turbo-stream.html"
-            }
-        })
-            .then(response => response.text())
-            .then(html => {
-                Turbo.renderStreamMessage(html)
-                form.reset()
-                this.newCategoryTarget.style.display = "none"
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    "Accept": "text/vnd.turbo-stream.html"
+                }
             })
-            .catch(error => {
-                console.error("Error creating phrase:", error)
-                alert("Error creating phrase. Please try again.")
-            })
+
+            if (!response.ok) throw new Error('Failed to create phrase')
+
+            const html = await response.text()
+            Turbo.renderStreamMessage(html)
+            form.reset()
+            this.newCategoryTarget.style.display = "none"
+        } catch (error) {
+            console.error("Error creating phrase:", error)
+            alert("Error creating phrase. Please try again.")
+        }
     }
 
-    async share(event) {
-        this.stopPropagation(event)
-        event.preventDefault();
-        const button = event.currentTarget;
-        const text = button.dataset.phraseText;
-        let audioUrl = button.dataset.phraseAudio;
-
-        console.log('Share function called');
-        console.log('Text to share:', text);
-        console.log('Original Audio URL:', audioUrl);
-
-        // If the URL is relative, make it absolute
-        // This will route through the production site when in development and test.
-        if (audioUrl.startsWith('/')) {
-            audioUrl = `https://lets-talk-together.com${audioUrl}`;
-        }
-
-        console.log('Final Audio URL:', audioUrl);
+    // Drag and drop handling
+    async handleDragEnd(event) {
+        const phraseId = event.item.id.split('_')[1]
+        const newCategory = event.to.dataset.category
+        event.to.style.maxHeight = `${event.to.scrollHeight}px`
 
         try {
-            console.log('Attempting to fetch audio file...');
-            const response = await fetch(audioUrl, {
-                mode: 'cors', // Add this line to explicitly set CORS mode
-                credentials: 'same-origin' // Add this line to include cookies if needed
-            });
-            console.log('Fetch response:', response);
+            const response = await fetch(`/phrases/${phraseId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ phrase: { category: newCategory } })
+            })
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            console.log('Audio blob created:', blob);
-
-            const audioFile = new File([blob], "audio.mp3", { type: "audio/mpeg" });
-            console.log('Audio File object created:', audioFile);
-
-            if (navigator.share) {
-                console.log('Web Share API is supported');
-                try {
-                    await navigator.share({
-                        text: text,
-                        files: [audioFile]
-                    });
-                    console.log('Shared successfully');
-                } catch (shareError) {
-                    console.error('Error during share:', shareError);
-                    if (shareError.name === 'AbortError') {
-                        console.log('User cancelled the share operation');
-                    } else {
-                        throw shareError;
-                    }
-                }
-            } else {
-                console.log('Web Share API is not supported, falling back to download');
-                const url = URL.createObjectURL(blob);
-                console.log('Blob URL created:', url);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'audio.mp3';
-                document.body.appendChild(a);
-                a.click();
-                console.log('Download initiated');
-                URL.revokeObjectURL(url);
-            }
+            if (!response.ok) throw new Error('Failed to update phrase category')
         } catch (error) {
-            console.error('Error in share function:', error);
-            console.error('Error details:', error.message);
-            alert("Error sharing the audio file. Please check the console for details.");
+            console.error('Error updating category:', error)
+            alert('Failed to update category. Please try again.')
         }
     }
 
+    // Cleanup
     disconnect() {
         if (this.currentAudio) {
             this.currentAudio.pause()
             this.currentAudio = null
         }
+        // Clean up any remaining blob URLs
+        if (this.audioCache) {
+            this.audioCache.forEach(url => URL.revokeObjectURL(url))
+            this.audioCache.clear()
+        }
     }
-
-    // Allow the User to drag and drop phrases into different categories
-    // handleDragEnd(event) {
-    //     const phraseId = event.item.id.split('_')[1]
-    //     const newCategory = event.to.dataset.category
-
-    //     // Update the containers maxHeight to the new scrollHeight (which is set by expandable_controller)
-    //     event.to.style.maxHeight = `${event.to.scrollHeight}px`
-
-    //     fetch(`/phrases/${phraseId}`, {
-    //         method: 'PATCH',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-    //         },
-    //         body: JSON.stringify({ phrase: { category: newCategory } })
-    //     })
-    //     .then(response => {
-    //         if (!response.ok) {
-    //             throw new Error('Failed to update phrase category')
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error)
-    //     })
-    // }
 }
+
