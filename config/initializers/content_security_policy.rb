@@ -14,43 +14,51 @@ Rails.application.configure do
     policy.script_src  :self, :https, "'unsafe-inline'", "'unsafe-eval'"
     policy.style_src   :self, :https, "'unsafe-inline'"
 
-    # Build connect sources based on environment
-    connect_sources = [:self, :https]
+    # Development-specific sources
     if Rails.env.development?
-      connect_sources.push(
+      dev_sources = [
         "http://lvh.me:3000",
         "ws://lvh.me:3000",
         "http://localhost:3000",
-        "ws://localhost:3000"
-      )
+        "ws://localhost:3000",
+        "http://localhost:3100",  # Added for Vite
+        "ws://localhost:3100"     # Added for Vite HMR
+      ]
     end
 
-    if Rails.env.production?
-      connect_sources.push(
+    # Production-specific sources
+    prod_sources = if Rails.env.production?
+      [
         "https://lets-talk-together.com",
         "wss://lets-talk-together.com",
         "https://lets-talk-prod.s3.ap-southeast-2.amazonaws.com"
-      )
-    end
-
-    policy.connect_src(*connect_sources)
-
-    # Media sources
-    media_sources = [:self, :https]
-    if Rails.env.development?
-      media_sources.push("http://lvh.me:3000", "http://localhost:3000")
+      ]
     else
-      media_sources.push("https://lets-talk-together.com")
+      []
     end
-    media_sources.push("https://lets-talk-prod.s3.ap-southeast-2.amazonaws.com")
-    
-    policy.media_src(*media_sources)
+
+    # Combine sources for connect-src
+    policy.connect_src(
+      :self,
+      :https,
+      *(dev_sources || []),
+      *prod_sources
+    )
+
+    # Allow blob: URLs for media playback
+    policy.media_src(
+      :self,
+      :https,
+      'blob:',
+      *(dev_sources || []),
+      *prod_sources
+    )
   end
+
+  # Report CSP violations in development, enforce in production
+  config.content_security_policy_report_only = Rails.env.development?
 
   # Remove nonce generation as we're using unsafe-inline
   config.content_security_policy_nonce_generator = nil
   config.content_security_policy_nonce_directives = []
-
-  # Report CSP violations in production
-  config.content_security_policy_report_only = Rails.env.development?
 end
