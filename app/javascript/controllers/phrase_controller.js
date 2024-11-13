@@ -151,7 +151,7 @@ export default class extends Controller {
             const blob = await response.blob();
             console.log('Audio blob created:', blob);
 
-            const audioFile = new File([blob], "audio.mp3", { type: "audio/mpeg" });
+            const audioFile = new File([blob], `${text.slice(0, 20)}.mp3`, { type: "audio/mpeg" });
             console.log('Audio File object created:', audioFile);
 
             if (navigator.share) {
