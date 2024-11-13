@@ -11,7 +11,7 @@ class PhrasesController < ApplicationController
         @phrases = current_user.phrases.active.order(created_at: :desc)
         @phrases = @phrases.where("text ILIKE ?", "%#{params[:search]}%") if params[:search].present?
         @phrases = @phrases.where(category: params[:category]) if params[:category].present?
-        @phrases = @phrases.page(params[:page]).per(10)
+        @phrases = @phrases.page(params[:page])
         @phrase = current_user.phrases.build
         @categories = current_user.phrase_categories
     end
